@@ -99,4 +99,20 @@ class MemberRepositoryTest {
         //then
         assertThat(member.getUsername()).isEqualTo("AAA");
     }
+
+    @Test
+    public void findUserTest() throws Exception {
+        //given
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        //when
+        List<Member> findMember = memberRepository.findUser("AAA", 10);
+
+        //then
+        assertThat(findMember.get(0)).isEqualTo(m1);
+    }
+
 }
