@@ -1,0 +1,38 @@
+# 스프링 데이터 JPA 페이징과 정렬
+
+- Page 는 1부터 시작이 아니라 0 부터 시작
+
+- Page 인터페이스
+```java
+public interface Page<T> extends Slice<T> {
+    int getTotalPages(); //전체 페이지 수
+    long getTotalElements(); //전체 데이터 수
+    <U> Page<U> map(Function<? super T, ? extends U> converter); //변환기
+}
+```
+
+- Slice 인터페이스
+```java
+public interface Slice<T> extends Streamable<T> {
+    int getNumber(); //현재 페이지
+    int getSize(); //페이지 크기
+    int getNumberOfElements(); //현재 페이지에 나올 데이터 수
+    List<T> getContent(); //조회된 데이터
+    boolean hasContent(); //조회된 데이터 존재 여부
+    Sort getSort(); //정렬 정보
+    boolean isFirst(); //현재 페이지가 첫 페이지 인지 여부
+    boolean isLast(); //현재 페이지가 마지막 페이지 인지 여부
+    boolean hasNext(); //다음 페이지 여부
+    boolean hasPrevious(); //이전 페이지 여부
+    Pageable getPageable(); //페이지 요청 정보
+    Pageable nextPageable(); //다음 페이지 객체
+    Pageable previousPageable();//이전 페이지 객체
+    <U> Slice<U> map(Function<? super T, ? extends U> converter); //변환기
+}
+```
+
+- 페이지를 유지하면서 엔티티를 DTO로 변환 하기
+```java
+    Page<Member> page = memberRepository.findByAge(10, pageRequest);
+    Page<MemberDto> dtoPage = page.map(m -> new MemberDto());
+```
