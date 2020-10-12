@@ -198,7 +198,4 @@ class MemberRepositoryTest {
         System.out.println("optionalMember = " + optionalMember);
 
     }
-
-
-
 }
