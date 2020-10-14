@@ -69,4 +69,7 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     List<Member> findLockByUsername(String username);
+
+    @Query(value = "select m From Member m join fetch m.team", countQuery = "select count(m.username) FROM Member m")
+    Page<Member> findPageAll(Pageable pageable);
 }
