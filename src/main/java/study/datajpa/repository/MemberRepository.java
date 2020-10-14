@@ -72,4 +72,8 @@ public interface MemberRepository extends JpaRepository<Member, Long>, MemberRep
 
     @Query(value = "select m From Member m join fetch m.team", countQuery = "select count(m.username) FROM Member m")
     Page<Member> findPageAll(Pageable pageable);
+
+    <T> List<T> findProjectionsByUsername(String username, Class<T> type);
+//    List<UsernameOnlyDto> findProjectionsByUsername(String username);
+//    List<UsernameOnly> findProjectionsByUsername(String username);
 }

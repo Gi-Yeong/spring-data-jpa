@@ -442,4 +442,30 @@ class MemberRepositoryTest {
         assertThat(result.get(0).getUsername()).isEqualTo("m1");
     }
 
+    @Test
+    public void projections() throws Exception {
+        //given
+        Team teamA = new Team("teamA");
+        entityManager.persist(teamA);
+
+        Member m1 = new Member("m1", 10, teamA);
+        Member m2 = new Member("m2", 13, teamA);
+        entityManager.persist(m1);
+        entityManager.persist(m2);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        //when
+        List<NestedClosedProjections> result = memberRepository.findProjectionsByUsername("m1", NestedClosedProjections.class);
+//        List<UsernameOnly> result = memberRepository.findProjectionsByUsername("m1", UsernameOnly.class);
+
+        //then
+        for (NestedClosedProjections usernameOnly : result) {
+            System.out.println("usernameOnly = " + usernameOnly.getUsername());
+            System.out.println("usernameOnly = " + usernameOnly.getTeam().getName());
+//            System.out.println("usernameOnly = " + usernameOnly.getAge());
+        }
+    }
+
 }
