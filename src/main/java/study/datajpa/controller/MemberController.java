@@ -45,7 +45,8 @@ public class MemberController {
         return page.map(MemberDto::new);
     }
 
-    @PostConstruct
+//    @PostConstruct
+    // 테스트 데이터를 만들기 위한 부분
     public void init() {
         for (int i = 0; i < 100; i++) {
             Team team = new Team("team");
