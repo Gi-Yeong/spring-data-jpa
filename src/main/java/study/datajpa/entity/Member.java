@@ -44,6 +44,9 @@ public class Member extends BaseEntity {
     }
 
     public void changeTeam(Team team) {
+        if (team != null) {
+            team.getMembers().remove(this);
+        }
         this.team = team;
         team.getMembers().add(this);
     }
