@@ -332,4 +332,32 @@ class MemberRepositoryTest {
         //then
     }
 
+    @Test
+    public void queryHint() throws Exception {
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        entityManager.flush();
+        entityManager.clear();
+
+        //when
+        Member findMember = memberRepository.findReadOnlyByUsername("member1");
+        findMember.setUsername("member2");
+
+        entityManager.flush();
+        //then
+    }
+    
+    @Test
+    public void lock() throws Exception {
+        //given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        entityManager.flush();
+        entityManager.clear();
+
+        //when
+        List<Member> findMember = memberRepository.findLockByUsername("member1");
+        //then
+    }
+    
+
 }
