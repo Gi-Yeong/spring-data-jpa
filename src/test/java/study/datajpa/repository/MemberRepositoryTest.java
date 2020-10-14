@@ -13,11 +13,12 @@ import study.datajpa.dto.MemberDto;
 import study.datajpa.entity.Member;
 import study.datajpa.entity.Team;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
-import static org.assertj.core.api.Assertions.as;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
@@ -30,6 +31,10 @@ class MemberRepositoryTest {
 
     @Autowired
     TeamRepository teamRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
+
 
     @Test
     public void testMember() throws Exception {
@@ -269,4 +274,27 @@ class MemberRepositoryTest {
         }
     }
 
+    @Test
+    public void bulkUpdate() throws Exception {
+        //given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 11));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 40));
+
+        //when
+        int resultCount = memberRepository.bulkAgeUpdate(20);
+//        entityManager.flush();
+//        entityManager.clear();
+
+        List<Member> member5 = memberRepository.findByUsername("member5");
+        for (Member member : member5) {
+            // 영속성 컨덱스트 에는 반영이 안되어 있다.
+            System.out.println("member5 = " + member);
+        }
+
+        //then
+        assertThat(resultCount).isEqualTo(3);
+    }
 }

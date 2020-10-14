@@ -1,5 +1,7 @@
 server:
   port: 80
+  compression:
+    enabled: true # css, html 등 압축해서 전송할 때 이득이 되는 포맷들은 자동적으로 압축해서 보내는 것으로 설정
 
 spring:
   datasource:
