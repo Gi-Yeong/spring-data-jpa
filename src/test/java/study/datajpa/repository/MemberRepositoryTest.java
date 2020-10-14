@@ -1,6 +1,6 @@
 package study.datajpa.repository;
 
-import org.hibernate.Hibernate;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,6 +8,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.datajpa.dto.MemberDto;
@@ -346,7 +347,7 @@ class MemberRepositoryTest {
         entityManager.flush();
         //then
     }
-    
+
     @Test
     public void lock() throws Exception {
         //given
@@ -358,7 +359,7 @@ class MemberRepositoryTest {
         List<Member> findMember = memberRepository.findLockByUsername("member1");
         //then
     }
-    
+
     @Test
     public void callCustom() throws Exception {
         //given
@@ -391,4 +392,25 @@ class MemberRepositoryTest {
         System.out.println("findMember.getLastModifiedBy = " + findMember.getLastModifiedBy());
     }
 
+    @Test
+    public void specBase() throws Exception {
+        //given
+        Team team = new Team("teamA");
+        entityManager.persist(team);
+
+        Member m1 = new Member("m1", 0, team);
+        Member m2 = new Member("m2", 0, team);
+        entityManager.persist(m1);
+        entityManager.persist(m2);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        //when
+        Specification<Member> spec = MemberSpec.username("m1").and(MemberSpec.teamName("teamA"));
+        List<Member> result = memberRepository.findAll(spec);
+
+        //then
+        assertThat(result.size()).isEqualTo(1);
+    }
 }
